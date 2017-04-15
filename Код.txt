@@ -1,0 +1,116 @@
+static class ArraySorter
+{
+    /// <summary>
+    /// Сортировка "Пузырьком"
+    /// </summary>
+    /// <param name="array">Массив для сортировки на месте</param>
+    public static void BubbleSort<T>(IList<T> array) where T : IComparable<T>
+    {
+        for (Int32 i = 0; i < array.Count; ++i)
+        {
+            // Цикл до последнего "всплывшего" элемента
+            for (Int32 j = 0; j < array.Count - 1 - i; ++j)
+            {
+                if (array[j].CompareTo(array[j + 1]) > 0)
+                {
+                    T temp = array[j];
+                    array[j] = array[j + 1];
+                    array[j + 1] = temp;
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Проверка сортировки массива
+    /// </summary>
+    /// <param name="array">Массив для проверки</param>
+    /// <returns>Возвращает true если массив отсортирован, в противном случае - false</returns>
+    public static bool IsSorted<T>(IList<T> array) where T : IComparable<T>
+    {
+        for (Int32 i = 0; i < array.Count - 1; ++i)
+        {
+            if (array[i].CompareTo(array[i + 1]) > 0)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+class Program
+{
+    // Метод вывода массива в консоль. Безопасный к исключениям
+    static void PrintArray<T>(IList<T> array)
+    {
+        try
+        {
+            foreach (T item in array)
+            {
+                Console.Write("{0} ", item);
+            }
+
+            Console.WriteLine();
+        }
+        catch
+        {
+            // "Проглатывание" исключения, т.к. вывод не должен влиять на тест
+        }
+    }
+
+    // Метод выполняющий сортироку и выводящий результат в консоль
+    static void Test<T>(IList<T> array) where T : IComparable<T>
+    {
+        Console.WriteLine("Массив до сотриорвки:");
+        PrintArray(array);
+        Console.WriteLine();
+
+        ArraySorter.BubbleSort(array);
+
+        Console.WriteLine("Массив после сотриорвки:");
+        PrintArray(array);
+        Console.WriteLine();
+    }
+
+
+    static void Main(string[] args)
+    {
+        try
+        {
+            String[] arrayString = { "C", "#", "-", "объектно", "-", "ориентированный", "язык", "программирования" };
+            Test(arrayString);
+
+            Int32[] arrayInt32 = { 3, 1, 4, 1, 5, 9, 2, 6, 1, 2, 3, 5, 8, 4, 4 };
+            Test(arrayInt32);
+
+            Double[] emptyArrayDouble = { };
+            Test(emptyArrayDouble);
+
+            List<String> listString = new List<String> { "C", "#", "относится", "к", "семье", "языков", "с", "C", "-", "подобным", "синтаксисом" };
+            Test(listString);
+
+            List<Int32> listInt32 = new List<Int32> { 2, 5, 8, 6, 2, 1, 5, 5, 6, 2, 1, 5, 5 };
+            Test(listInt32);
+
+            List<Double> emptyListDouble = new List<Double>();
+            Test(emptyListDouble);
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine(exception.Message);
+        }
+    }
+}
